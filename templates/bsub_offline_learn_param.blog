@@ -1,0 +1,33 @@
+fixed RealMatrix Mean1 = [120.0, 100.0, 100.0];
+fixed RealMatrix Mean2 = [140.0, 125.0, 160.0];
+fixed RealMatrix Mean3 = [180.0, 170.0, 170.0];
+fixed RealMatrix Var1 = [400.0, 256.0, 144.0; 256.0, 256.0, 196.0; 144.0, 196.0, 324.0];
+fixed RealMatrix Var2 = [40.0, 25.0, 9.0; 25.0, 25.0, 16.0; 9.0, 16.0, 20.0];
+fixed RealMatrix Var3 = [1600.0, 1600.0, 900.0; 1600.0, 2500.0, 2000.0; 900.0, 2000.0, 3000.0];
+
+// data
+fixed RealMatrix dataR = loadRealMatrix("data_r.txt");
+fixed RealMatrix dataG = loadRealMatrix("data_g.txt");
+fixed RealMatrix dataB = loadRealMatrix("data_b.txt");
+fixed RealMatrix means = loadRealMatrix("means_init.txt");
+
+random RealMatrix Mean(Component c, ImageX x, ImageY y) ~
+    if (c == Component[0] | c == Component[1]) then MultivarGaussian([means[toInt(y) * xdim + toInt(x)][0], means[toInt(y) * xdim + toInt(x)][1], means[toInt(y) * xdim + toInt(x)][2]], Var2)
+    else MultivarGaussian(Mean3, Var3)
+;
+
+random RealMatrix Variance(Component c, ImageX x, ImageY y) ~
+    if (c == Component[0]) then InvWishart(Var1, 4)
+    else
+        if (c == Component[1]) then InvWishart(Var2, 4)
+        else InvWishart(Var3, 4)
+;
+random Component AssociatedComponent(ImageX x, ImageY y, Time t) ~ Discrete([1.0, 1.0, 1.0]);
+
+random RealMatrix Intensity(ImageX x, ImageY y, Time t) ~
+    MultivarGaussian(Mean(AssociatedComponent(x, y, t), x, y),
+                     Variance(AssociatedComponent(x, y, t), x, y));
+
+obs Intensity(x, y, t) = [dataR[toInt(t)][toInt(y) * xdim + toInt(x)]; dataG[toInt(t)][toInt(y) * xdim + toInt(x)]; dataB[toInt(t)][toInt(y) * xdim + toInt(x)]] for ImageX x, ImageY y, Time t;
+query Mean(Component[0], ImageX[0], ImageY[0]);
+query Variance(Component[0], ImageX[0], ImageY[1]);
