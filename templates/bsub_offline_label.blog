@@ -36,5 +36,4 @@ obs Variance(c, x, y) = [vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 0],
                          vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 4], vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 5];
                          vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 6], vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 7],
                          vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 8]] for Component c, ImageX x, ImageY y;
-query AssociatedComponent(ImageX[0], ImageY[0], Time[0]);
-query AssociatedComponent(ImageX[0], ImageY[0], Time[1]);
+query AssociatedComponent(x, y, t) for ImageX x, ImageY y, Time t;
