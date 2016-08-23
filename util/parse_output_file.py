@@ -122,19 +122,19 @@ def parse_mean_var_offline():
         np.save(os.path.join(args.output_dir, 'var%d.npy' % i), cov_mat[i])
     colors = ['r', 'g', 'b', 'y', 'm']
 
-    while True:
-        input_str = raw_input("Please input desired x and y: ")
-        x, y = [int(i) for i in input_str.split()]
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        for c in range(len(imgs)):
-            mean, cov = imgs[c][y, x], cov_mat[c][y, x]
-            X, Y, Z = np.random.multivariate_normal(mean, cov, 200).T
-            ax.scatter(X, Y, Z, c=colors[c])
-        ax.set_xlim([0, 255])
-        ax.set_ylim([0, 255])
-        ax.set_zlim([0, 255])
-        fig.show()
+    # while True:
+    #     input_str = raw_input("Please input desired x and y: ")
+    #     x, y = [int(i) for i in input_str.split()]
+    #     fig = plt.figure()
+    #     ax = fig.add_subplot(111, projection='3d')
+    #     for c in range(len(imgs)):
+    #         mean, cov = imgs[c][y, x], cov_mat[c][y, x]
+    #         X, Y, Z = np.random.multivariate_normal(mean, cov, 200).T
+    #         ax.scatter(X, Y, Z, c=colors[c])
+    #     ax.set_xlim([0, 255])
+    #     ax.set_ylim([0, 255])
+    #     ax.set_zlim([0, 255])
+    #     fig.show()
 
 
 def parse_static():

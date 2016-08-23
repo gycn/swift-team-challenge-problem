@@ -18,16 +18,16 @@ parser.add_argument('--xlen', type=int, help="X dimension")
 parser.add_argument('--ylen', type=int, help="X dimension")
 args = parser.parse_args()
 
-type_declarations = "type Component\n" \
-                    "type ImageX\n" \
-                    "type ImageY\n" \
-                    "type Time\n"
-number_format = "distinct Component[{0}]\n" \
-                "distinct ImageX[{1]]\n" \
-                "distinct ImageY[{2]]\n" \
-                "distinct Time[{3}]\n" \
+type_declarations = "type Component;\n" \
+                    "type ImageX;\n" \
+                    "type ImageY;\n" \
+                    "type Time;\n"
+number_format = "distinct Component Component[{0}];\n" \
+                "distinct ImageX ImageX[{1}];\n" \
+                "distinct ImageY ImageY[{2}];\n" \
+                "distinct Time Time[{3}];\n" \
                 "fixed Integer xdim = {1};\n" \
-                "fixed Integer xdim = {2};\n" \
+                "fixed Integer ydim = {2};\n" \
                 "fixed Integer numTimesteps = {3};\n"
 
 def add_header(output_file):
@@ -47,7 +47,7 @@ def add_prev_offline(output_file, t):
 def main():
     output_file = open(args.output_name, 'w')
     add_header(output_file)
-    with open(args.input_file, 'r') as input_file:
+    with open(args.input_name, 'r') as input_file:
         output_file.write(''.join(input_file.readlines()))
     output_file.close()
 
