@@ -17,7 +17,7 @@ args = parser.parse_args()
 
 def save_img_txt():
     data = []
-    for img_path in os.listdir(args.data_dir):
+    for img_path in sorted(os.listdir(args.data_dir)):
         img = skio.imread(os.path.join(args.data_dir, img_path))
         if len(img.shape) < 3:
             img = np.dstack((img, img, img))
@@ -34,7 +34,7 @@ def save_img_txt():
 
 def get_tight_mean_var():
     data = []
-    for img_path in os.listdir(args.data_dir):
+    for img_path in sorted(os.listdir(args.data_dir)):
         img = skio.imread(os.path.join(args.data_dir, img_path)) 
         if len(img.shape) < 3:
             img = np.dstack((img, img, img))

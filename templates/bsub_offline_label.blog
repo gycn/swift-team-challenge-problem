@@ -29,6 +29,27 @@ random RealMatrix Intensity(ImageX x, ImageY y, Time t) ~
     MultivarGaussian(Mean(AssociatedComponent(x, y, t), x, y),
                      Variance(AssociatedComponent(x, y, t), x, y));
 
+/* Spatial and temporal contiguity */
+random Boolean NeighborRight(ImageX x, ImageY y, Time t) ~
+    if (AssociatedComponent(x, y, t) == AssociatedComponent(x, y, t)) then BooleanDistrib(0.99)
+    else BooleanDistrib(0.01)
+;
+
+random Boolean NeighborDown(ImageX x, ImageY y, Time t) ~
+    if (AssociatedComponent(x, y, t) == AssociatedComponent(x, y, t)) then BooleanDistrib(0.99)
+    else BooleanDistrib(0.01)
+;
+
+random Boolean TemporalContiguity(ImageX x, ImageY y, Time t) ~
+    if (AssociatedComponent(x, y, t) == AssociatedComponent(x, y, prevTime(t))) then BooleanDistrib(0.9)
+    else BooleanDistrib(0.01)
+;
+
+fixed Time prevTime(Time t) =
+    if (t == Time[0]) then toInt(t)
+    else toInt(t) - 1
+;
+
 obs Intensity(x, y, t) = [dataR[toInt(t)][toInt(y) * xdim + toInt(x)]; dataG[toInt(t)][toInt(y) * xdim + toInt(x)]; dataB[toInt(t)][toInt(y) * xdim + toInt(x)]] for ImageX x, ImageY y, Time t;
 obs Mean(c, x, y) = [means[toInt(c) * xdim * ydim + toInt(y) * xdim + toInt(x)][0]; means[toInt(c) * xdim * ydim + toInt(y) * xdim + toInt(x)][1]; means[toInt(c) * xdim * ydim + toInt(y) * xdim + toInt(x)][2]] for Component c, ImageX x, ImageY y;
 obs Variance(c, x, y) = [vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 0], vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 1],
@@ -36,4 +57,7 @@ obs Variance(c, x, y) = [vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 0],
                          vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 4], vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 5];
                          vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 6], vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 7],
                          vars[toInt(c)][xdim * 9 * toInt(y) + 9 * toInt(x) + 8]] for Component c, ImageX x, ImageY y;
+obs TemporalContiguity(x, y, t) = true for ImageX x, ImageY y, Time t;
+obs NeighborRight(x, y, t) = true for ImageX x, ImageY y, Time t : toInt(x) < xdim - 1;
+obs NeighborDown(x, y, t) = true for ImageX x, ImageY y, Time t : toInt(y) < ydim - 1;
 query AssociatedComponent(x, y, t) for ImageX x, ImageY y, Time t;

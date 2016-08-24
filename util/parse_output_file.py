@@ -42,7 +42,7 @@ def parse_mean_var_offline():
             if comp >= len(imgs):
                 for i in range(len(imgs), comp + 1):
                     imgs.append(np.zeros((args.ylen, args.xlen, 3)))
-                    cov_mat.append(np.zeros((args.xlen, args.ylen, 3, 3)))
+                    cov_mat.append(np.zeros((args.ylen, args.xlen, 3, 3)))
         elif 'DiagVar' in line:
             if state == 'mean':
                 imgs[comp][y, x] = np.array(curr_val)
