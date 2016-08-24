@@ -80,6 +80,7 @@ def parse_offline_sequence():
     for line in f.readlines():
         contents = line.split()
         if 'query' in line:
+            state = 'Query'
             if len(curr_val) > 0:
                 curr_img = imgs[t]
                 if (max([(curr_val[i], i) for i in curr_val])[1] == 'Component[2]'):
@@ -101,6 +102,8 @@ def parse_offline_sequence():
                 else:
                     curr_img[y, x] = 0.0
             curr_val = {}
+        elif state is None:
+            continue
         else:
             curr_val[contents[0]] = float(contents[2])
 

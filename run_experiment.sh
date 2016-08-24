@@ -33,6 +33,7 @@ cd src
 g++ -Ofast -std=c++11 bsub_offline_label.cpp random/*.cpp -o bsub_offline_label -larmadillo
 ./bsub_offline_label > bsub_output_label.txt
 mv bsub_output_label.txt ../../
+cd ../../
 
 # Parse labels from output log into images
 mkdir $6
