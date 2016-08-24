@@ -31,14 +31,17 @@ random RealMatrix Intensity(ImageX x, ImageY y, Time t) ~
 
 /* Spatial and temporal contiguity */
 random Boolean NeighborRight(ImageX x, ImageY y, Time t) ~
-    if (AssociatedComponent(x, y, t) == AssociatedComponent(x, y, t)) then BooleanDistrib(0.99)
+    if (AssociatedComponent(x, y, t) == AssociatedComponent(nextX(x), y, t)) then BooleanDistrib(0.99)
     else BooleanDistrib(0.01)
 ;
 
 random Boolean NeighborDown(ImageX x, ImageY y, Time t) ~
-    if (AssociatedComponent(x, y, t) == AssociatedComponent(x, y, t)) then BooleanDistrib(0.99)
+    if (AssociatedComponent(x, y, t) == AssociatedComponent(x, nextY(y), t)) then BooleanDistrib(0.99)
     else BooleanDistrib(0.01)
 ;
+
+fixed ImageX nextX(ImageX x) = toInt(x) + 1;
+fixed ImageY nextY(ImageY y) = toInt(y) + 1;
 
 random Boolean TemporalContiguity(ImageX x, ImageY y, Time t) ~
     if (AssociatedComponent(x, y, t) == AssociatedComponent(x, y, prevTime(t))) then BooleanDistrib(0.9)
