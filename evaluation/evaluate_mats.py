@@ -20,6 +20,8 @@ parser.add_argument('-o', '--output',
 args = parser.parse_args()
 
 def compute_F1(num_true_pos, num_false_pos, num_false_neg):
+    if num_true_pos == 0:
+        return 0
     p_denom = float(num_true_pos + num_false_pos)
     r_denom = float(num_true_pos + num_false_neg)
     if p_denom == 0 or r_denom == 0:
@@ -53,9 +55,22 @@ def main():
         print("Cannot compute statistics because ground truth has no positive results.")
     else:
         print("F1 Score: %f" % f1)
-        print("Average rate of false positives per frame: %f" % avg_false_pos)
-        print("Average rate of false negatives per frame: %f" % avg_false_neg)
-
+        if args.graph:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            scores = []
+            for i in range(min_shape[2]):
+                total_true_p = np.sum(true_pos[:, :, i])
+                total_false_p = np.sum(false_pos[:, :, i])
+                total_false_n = np.sum(false_neg[:, :, i])
+                scores.append(compute_F1(total_true_p, total_false_p, total_false_n))
+            x_axis = np.arange(0, len(scores))
+            ax.scatter(x_axis, scores)
+            #ax.set_xlim([0,len(x_axis)])
+            #ax.set_ylim([0,1])
+            plt.tight_layout()
+            ax.set_xlim([0,len(x_axis) - 1])
+            plt.savefig(args.output)
 
 if __name__ == '__main__':
     main()

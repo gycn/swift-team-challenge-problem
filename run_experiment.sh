@@ -41,7 +41,11 @@ python util/parse_output_file.py --input_file bsub_output_label.txt --output_dir
 
 
 # Phase Three: Evaluation
+python evaluation/run_opencv.py -v 2 -f $1 -o $6/open_cv
 python evaluation/labeled_image_to_mat.py -f $7 -o $6/gt_mat -b 0
 python evaluation/labeled_image_to_mat.py -f $6/blog -o $6/blog_mat -b 0
-
-python evaluation/evaluate_mats.py -p $6/blog_mat -t $6/gt_mat -g True -o ../
+python evaluation/labeled_image_to_mat.py -f $6/open_cv -o $6/opencv_mat -b 0
+echo "Evaluating BLOG performance:"
+python evaluation/evaluate_mats.py -p $6/blog_mat -t $6/gt_mat -g True -o ./blog_f1_per_frame.png
+echo "Evaluating OpenCV performance:"
+python evaluation/evaluate_mats.py -p $6/opencv_mat -t $6/gt_mat -g True -o ../opencv_f1_per_frame.png
