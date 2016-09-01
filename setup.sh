@@ -1,3 +1,4 @@
+#!/bin/bash
 # Update and install armadillo/swift dependencies
 sudo apt-get update
 sudo apt-get install git g++ cmake libopenblas-dev liblapack-dev libarpack++2-dev
