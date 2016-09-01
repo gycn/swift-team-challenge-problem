@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: run_experiment.sh [data directory] [xlen] [ylen] [timesteps] [output timesteps] [output directory]
+# Usage: run_experiment.sh [data directory] [xlen] [ylen] [timesteps] [output timesteps] [output directory] [ground truth image directory]
 # Phase One: Perform offline inference on first n frames to get parameters
 
 # Make BLOG file, load images and means from pre-processing to Swift-readable text format
@@ -41,3 +41,7 @@ python util/parse_output_file.py --input_file bsub_output_label.txt --output_dir
 
 
 # Phase Three: Evaluation
+python evaluation/labeled_image_to_mat.py -f $7 -o $6/gt_mat -b 0
+python evaluation/labeled_image_to_mat.py -f $6/blog -o $6/blog_mat -b 0
+
+python evaluation/evaluate_mats.py -p $6/blog_mat -t $6/gt_mat -g True -o ../
